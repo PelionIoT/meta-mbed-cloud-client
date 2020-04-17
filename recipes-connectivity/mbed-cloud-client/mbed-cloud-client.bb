@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LICENSE_MD5SUM = "4336ad26bb93846e47581adc44c4514d"
 SOURCE_REPOSITORY = "git://git@github.com/ARMmbed/mbed-cloud-client-example.git"
 SOURCE_BRANCH = "master"
-SRCREV = "2278a25d10a9eb01f66f1250b028c73295634930"
+SRCREV = "86f8992e9294a66a8ecc003882db19b1d031d7ad"
 APP_NAME = "mbed-cloud-client-example"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/${APP_NAME}/mbed-cloud-client/LICENSE;md5=${LICENSE_MD5SUM}"
@@ -46,7 +46,8 @@ do_setup_pal_env() {
     cd "${WORKDIR}/git/${APP_NAME}"
     # Clean the old build directory
     rm -rf "__${TARGET}"
-    SSH_AUTH_SOCK=${SSH_AUTH_SOCK} python -m mbed deploy
+    export PATH=$PATH:${binlocaldir}
+    SSH_AUTH_SOCK=${SSH_AUTH_SOCK} python -m mbed deploy --protocol ssh
     SSH_AUTH_SOCK=${SSH_AUTH_SOCK} python ./pal-platform/pal-platform.py -v deploy --target="${TARGET}" generate
     cd ${CUR_DIR}
 }
