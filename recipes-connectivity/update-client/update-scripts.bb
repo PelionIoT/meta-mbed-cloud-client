@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 LICENSE_MD5SUM = "4336ad26bb93846e47581adc44c4514d"
 SOURCE_REPOSITORY = "git://git@github.com/ARMmbed/mbed-cloud-client.git"
 SOURCE_BRANCH = "master"
-SRCREV = "7b583acf30ca142c1949149c90bba420cd467b63"
+SRCREV = "e03c516af9c9137b56d9c2620a293c79f1f867f8"
 SCRIPT_DIR = "${WORKDIR}/git/update-client-hub/modules/pal-linux/scripts"
 
 # Default Update scripts are for Raspberrypi3. Please override these for HW specific srcipts if required.
@@ -32,13 +32,18 @@ SRC_URI = "${SOURCE_REPOSITORY};branch=${SOURCE_BRANCH};protocol=ssh"
 #"
 
 
+# This needed e.g. for calling pip module binaries like mbed-cli commands. If local
+# environment is using some other directory then override binlocaldir.
+binlocaldir ?= "${exec_prefix}/local/bin"
+
 # tar and bzip2 as runtime dependency
 RDEPENDS_${PN} = "tar bzip2"
 
 # Deploy for getting update-client-hub to working area
 do_configure() {
     cd "${WORKDIR}/git"
-    SSH_AUTH_SOCK=${SSH_AUTH_SOCK} python -m mbed deploy
+    export PATH=$PATH:${binlocaldir}
+    SSH_AUTH_SOCK=${SSH_AUTH_SOCK} python -m mbed deploy --protocol ssh
 }
 
 # Install update-scripts
