@@ -2,9 +2,9 @@ DESCRIPTION="update-scripts"
 
 LICENSE = "Apache-2.0"
 LICENSE_MD5SUM = "4336ad26bb93846e47581adc44c4514d"
-SOURCE_REPOSITORY = "git://git@github.com/ARMmbed/mbed-cloud-client.git"
+SOURCE_REPOSITORY = "git://git@github.com/PelionIoT/mbed-cloud-client.git"
 SOURCE_BRANCH = "master"
-SRCREV = "f72a23e0dc21de4c82ee53fe947153341419a5b9"
+SRCREV = "f277bdc5cf8f5dee22063a5d293c03d76a0a8da2"
 SCRIPT_DIR = "${WORKDIR}/git/update-client-hub/modules/pal-linux/scripts"
 
 # Default Update scripts are for Raspberrypi3. Please override these for HW specific srcipts if required.

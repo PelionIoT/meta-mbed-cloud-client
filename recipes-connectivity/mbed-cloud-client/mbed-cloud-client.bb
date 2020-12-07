@@ -3,9 +3,9 @@ DESCRIPTION="mbed-cloud-client-example"
 TOOLCHAIN = "POKY-GLIBC"
 LICENSE = "Apache-2.0"
 LICENSE_MD5SUM = "4336ad26bb93846e47581adc44c4514d"
-SOURCE_REPOSITORY = "git://git@github.com/ARMmbed/mbed-cloud-client-example.git"
+SOURCE_REPOSITORY = "git://git@github.com/PelionIoT/mbed-cloud-client-example.git"
 SOURCE_BRANCH = "master"
-SRCREV = "253409611edeb60b5ea80fdd82b91f01422238d9"
+SRCREV = "d0bc734d87f69884f30c72df9e6bf508ab8895b9"
 APP_NAME = "mbed-cloud-client-example"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/${APP_NAME}/mbed-cloud-client/LICENSE;md5=${LICENSE_MD5SUM}"
@@ -16,6 +16,8 @@ CFLAGS += "-D_FILE_OFFSET_BITS=64"
 
 SRC_URI = "${SOURCE_REPOSITORY};branch=${SOURCE_BRANCH};protocol=ssh;name=${APP_NAME};destsuffix=git/${APP_NAME}; \
     file://yocto-toolchain.cmake \
+    file://fota_update_activate.sh \
+    file://fota_install_callback.c \
     file://CloudClientExample.sh"
 
 DEPENDS = " glibc"
@@ -71,6 +73,9 @@ do_configure() {
     fi
 
     cp "${WORKDIR}/yocto-toolchain.cmake" "${WORKDIR}/git/${APP_NAME}/pal-platform/Toolchain/${TOOLCHAIN}"
+    if [ "${FOTA_ENABLE}" = "1" ]; then
+        cp "${WORKDIR}/fota_install_callback.c" "${WORKDIR}/git/${APP_NAME}/fota_install_callback.c"
+    fi
 
     # Set cmake extra defines
     EXTRA_DEFINES=""
@@ -78,7 +83,19 @@ do_configure() {
         echo "Define RESET_STORAGE for cmake."
         EXTRA_DEFINES="-DRESET_STORAGE=ON"
     fi
+    
+    if [ "${FOTA_ENABLE}" = "1" ]; then
+        echo "Define FOTA_ENABLE for cmake."
+        EXTRA_DEFINES="$EXTRA_DEFINES -DFOTA_ENABLE=ON"         
+    fi
 
+    if [ "${FOTA_TRACE}" = "1" ]; then
+        echo "Define FOTA_TRACE for cmake."
+        EXTRA_DEFINES="$EXTRA_DEFINES -DFOTA_TRACE=ON"         
+    fi    
+
+    echo ${EXTRA_DEFINES}
+    
     YOCTO_DIR=${TOPDIR} cmake -G "Unix Makefiles" ${EXTRA_DEFINES} -DCMAKE_BUILD_TYPE="${RELEASE_TYPE}" -DCMAKE_TOOLCHAIN_FILE="./../pal-platform/Toolchain/${TOOLCHAIN}/${TOOLCHAIN}.cmake" -DEXTERNAL_DEFINE_FILE="./../define-rpi3-yocto.txt"
     cd ${CUR_DIR}
 }
@@ -96,6 +113,11 @@ do_install() {
 
     install -d "${D}${sysconfdir}/init.d"
     install "${WORKDIR}/CloudClientExample.sh" "${D}${sysconfdir}/init.d"
+
+    if [ "${FOTA_ENABLE}" = "1" ]; then
+        # Install fota-scripts
+        install -m 555 "${WORKDIR}/fota_update_activate.sh"      "${D}/opt/arm"
+    fi
 }
 
 INITSCRIPT_PACKAGES = "${PN}"
