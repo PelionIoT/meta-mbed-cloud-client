@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LICENSE_MD5SUM = "4336ad26bb93846e47581adc44c4514d"
 SOURCE_REPOSITORY = "git://git@github.com/PelionIoT/mbed-cloud-client-example.git"
 SOURCE_BRANCH = "master"
-SRCREV = "e9c83cf263fbe27b31166284410e2aafce6a8808"
+SRCREV = "8ef8fceb0dfd77ec5bfcdd63463a7b3f9b5b99be"
 APP_NAME = "mbed-cloud-client-example"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/${APP_NAME}/mbed-cloud-client/LICENSE;md5=${LICENSE_MD5SUM}"
