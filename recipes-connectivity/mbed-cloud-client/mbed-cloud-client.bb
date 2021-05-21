@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LICENSE_MD5SUM = "4336ad26bb93846e47581adc44c4514d"
 SOURCE_REPOSITORY = "git://git@github.com/PelionIoT/mbed-cloud-client-example.git"
 SOURCE_BRANCH = "master"
-SRCREV = "8ef8fceb0dfd77ec5bfcdd63463a7b3f9b5b99be"
+SRCREV = "0af853d727ace56df5b306ee1e5444cf4c886bb7"
 APP_NAME = "mbed-cloud-client-example"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/${APP_NAME}/mbed-cloud-client/LICENSE;md5=${LICENSE_MD5SUM}"
@@ -39,6 +39,9 @@ TARGET = "Yocto_Generic_YoctoLinux_mbedtls"
 
 # Allowed [Debug|Release]
 RELEASE_TYPE="Debug"
+
+# Build build with -O0 as FORTIFY_SOURCE requires -O0 optimization
+DEBUG_BUILD="1"
 
 inherit cmake
 
